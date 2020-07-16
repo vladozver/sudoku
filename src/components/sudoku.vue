@@ -3,8 +3,16 @@
     <div class="sudoku-wrapper">
       <div class="sudoku-table">
         <div class="sudoku-row" v-for="i in 9" :key="i">
-          <div class="sudoku-cell" v-for="j in 9" :key="j" @click="select(j - 1, i - 1)">
-            <div class="help-grid" v-if="!cells[i - 1][j - 1] && helpers[i - 1][j - 1]">
+          <div
+            class="sudoku-cell"
+            v-for="j in 9"
+            :key="j"
+            @click="select(j - 1, i - 1)"
+          >
+            <div
+              class="help-grid"
+              v-if="!cells[i - 1][j - 1] && helpers[i - 1][j - 1]"
+            >
               <div
                 v-for="k in 9"
                 :key="k"
@@ -12,7 +20,14 @@
                 :class="{ hide: !helpers[i - 1][j - 1].includes(k) }"
               >
                 <svg height="100%" width="100%" viewBox="0 0 24 24">
-                  <text x="51%" y="60%" dominant-baseline="middle" text-anchor="middle">{{ k }}</text>
+                  <text
+                    x="51%"
+                    y="60%"
+                    dominant-baseline="middle"
+                    text-anchor="middle"
+                  >
+                    {{ k }}
+                  </text>
                 </svg>
               </div>
             </div>
@@ -38,7 +53,9 @@
                   y="55%"
                   dominant-baseline="middle"
                   text-anchor="middle"
-                >{{ cells[i - 1][j - 1] | cellValue }}</text>
+                >
+                  {{ cells[i - 1][j - 1] | cellValue }}
+                </text>
               </svg>
             </div>
           </div>
@@ -46,23 +63,50 @@
       </div>
     </div>
     <div class="controls">
-      <div v-for="i in controlsText.length" :key="i" @click="controlClick(i - 1)">
-        <svg height="100%" width="100%" font-size="7" viewBox="0 0 24 24" :class="helperClass(i)">
-          <rect v-if="i === 3" x="0" y="8" rx="2" ry="2" width="24" height="10" style="fill:#fff;" />
-          <rect v-if="i === 5" x="3" y="8" rx="2" ry="2" width="18" height="10" style="fill:#fff;" />
-          <text
-            x="50%"
-            y="55%"
-            dominant-baseline="middle"
-            text-anchor="middle"
-          >{{ controlsText[i - 1] }}</text>
+      <div
+        v-for="i in controlsText.length"
+        :key="i"
+        @click="controlClick(i - 1)"
+      >
+        <svg
+          height="100%"
+          width="100%"
+          font-size="7"
+          viewBox="0 0 24 24"
+          :class="helperClass(i)"
+        >
+          <rect
+            v-if="i === 3"
+            x="0"
+            y="8"
+            rx="2"
+            ry="2"
+            width="24"
+            height="10"
+            style="fill:#fff;"
+          />
+          <rect
+            v-if="i === 5"
+            x="3"
+            y="8"
+            rx="2"
+            ry="2"
+            width="18"
+            height="10"
+            style="fill:#fff;"
+          />
+          <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle">
+            {{ controlsText[i - 1] }}
+          </text>
         </svg>
       </div>
     </div>
     <div class="numpad">
       <div v-for="i in 9" :key="i" @click="numpadClick(i)">
         <svg height="100%" width="100%" font-size="20" viewBox="0 0 24 24">
-          <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle">{{ i }}</text>
+          <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle">
+            {{ i }}
+          </text>
         </svg>
       </div>
     </div>
@@ -85,7 +129,7 @@ export default {
       this.resumeGame();
     }
 
-    document.onkeydown = e => {
+    document.onkeydown = (e) => {
       let num = e.keyCode;
       if (num === 32) {
         this.helperOn = !this.helperOn;
@@ -119,17 +163,17 @@ export default {
       helperOn: false,
       proOn: false,
       history: [],
-      isLocked: true
+      isLocked: true,
     };
   },
   filters: {
     cellValue(val) {
       return val ? (val.length === 2 ? val.slice(1) : val) : "";
-    }
+    },
   },
   computed: {
     helperClass() {
-      return val =>
+      return (val) =>
         val === 3
           ? { controlOn: this.helperOn }
           : val === 5
@@ -152,7 +196,7 @@ export default {
     },
     isWarning() {
       return (x, y) => !this.proOn && this.warnings.includes(x + y * 9);
-    }
+    },
   },
   methods: {
     newGame() {
@@ -194,13 +238,13 @@ export default {
       });
     },
     generateGame() {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         let game = sudoku.makepuzzle();
         this.solution = sudoku
           .solvepuzzle(game)
-          .map(el => (el === null ? 0 : el + 1))
+          .map((el) => (el === null ? 0 : el + 1))
           .join("");
-        this.game = game.map(el => (el === null ? 0 : el + 1)).join("");
+        this.game = game.map((el) => (el === null ? 0 : el + 1)).join("");
         resolve();
       });
     },
@@ -235,7 +279,7 @@ export default {
       let arr = this.cells.map((el, y) =>
         el
           .map((el2, x) => (el2 === val ? x + y * 9 : null))
-          .filter(el => el != null)
+          .filter((el) => el != null)
       );
       this.marked = [].concat(...arr);
     },
@@ -297,7 +341,7 @@ export default {
 
       this.mark(this.cells[y][x]);
       this.checkNumPosition(x + y * 9);
-      [...this.warnings].map(el => this.checkNumPosition(el));
+      [...this.warnings].map((el) => this.checkNumPosition(el));
       this.checkHelpPosition(x + y * 9);
     },
     submitHelper(num, x, y, history) {
@@ -350,7 +394,7 @@ export default {
         return;
       }
       const highlight = this.highlight(pos % 9, (pos - (pos % 9)) / 9);
-      let arr = highlight.filter(el => this.cell(el) === num);
+      let arr = highlight.filter((el) => this.cell(el) === num);
       if (arr.length > 1) {
         this.warnings = [...new Set([...this.warnings, ...arr])];
       } else if (this.warnings.includes(pos)) {
@@ -359,7 +403,7 @@ export default {
     },
     checkHelpPosition(pos) {
       const num = this.cell(pos);
-      this.highlighted.forEach(el => {
+      this.highlighted.forEach((el) => {
         if (this.helper(el) && this.helper(el).includes(num)) {
           this.submitHelper(num, el % 9, (el - (el % 9)) / 9, "check");
         }
@@ -429,8 +473,8 @@ export default {
       } else {
         this.submitNumber(val, this.xCoor, this.yCoor);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
