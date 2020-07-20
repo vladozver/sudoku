@@ -9,7 +9,6 @@
 <script>
 import Header from "./components/header";
 import Sudoku from "./components/sudoku";
-// import Rainbow from "./components/rainbow";
 
 export default {
   name: "App",
