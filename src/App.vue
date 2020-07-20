@@ -35,7 +35,6 @@ body {
 </style>
 <template>
   <div id="app">
-    <!-- <Rainbow /> -->
     <Header />
     <Sudoku />
   </div>
